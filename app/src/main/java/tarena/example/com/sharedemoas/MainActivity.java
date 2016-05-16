@@ -1,11 +1,12 @@
 package tarena.example.com.sharedemoas;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -28,15 +29,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 复制
+     *
+     * @param content    文本
+     * @param context    上下文
+     */
+    public static void copy(String content, Context context) {
+// 得到剪贴板管理器
+        ClipboardManager cmb = (ClipboardManager) context
+                .getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setText(content.trim());
+    }
+
     private void showShare() {
         ShareSDK.initSDK(this);
-        OnekeyShare oks = new OnekeyShare();
+        final OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
-        oks.setCustomerLogo(BitmapFactory.decodeResource(getResources(),R.drawable.ssdk_oks_classic_evernote), "zhangsan", new View.OnClickListener() {
+        oks.setCustomerLogo(BitmapFactory.decodeResource(getResources(),R.drawable.ssdk_oks_classic_evernote), "自定义复制", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"自定义控件",Toast.LENGTH_LONG).show();
+                /*Toast.makeText(MainActivity.this,"自定义控件",Toast.LENGTH_LONG).show();*/
+                //复制文本
+                copy(oks.getText(),MainActivity.this);
             }
         });
         oks.setTheme(OnekeyShareTheme.CLASSIC);
